@@ -76,12 +76,7 @@ fIF = -60e3;
 fD = 0; %????????
 carrier_phase = 2*pi*(fIF + fD).*t_vec;
 
-delay = 9;
-tau = delay*tstep;
-S=0;
-for i=1:6625
-    S = S + data(i) * (i+delay)*sig_CA_2(i)*exp(-1i*carrier_phase(i));
-end
+
 %% ========================================================================
 % Problem 3 - Create a search grid
 %==========================================================================
