@@ -46,8 +46,38 @@ plotAzEl(azimuth,elevation,svs)
 % Problem 2 - Carrier Wipeoff
 %==========================================================================
 
-% Delay axis
-delay = 0;
+% Load the datafile
+load('ASEN5091data.mat');
+
+% Create a time vector at intervals of deltaTs
+tstep = 1/fn;
+tdur = 0.001; % 1ms
+t_vec = 0 : tstep : tdur;
+
+% Create a vector of PRN2 C/A code values
+PRN_2 = [1, 9]; % PRN 5
+CA_2 = generate_CA_code(PRN_2);
+
+% Match C/A code to time vector
+tstep = tdur/length(CA_2);
+sig_CA_2 = zeros(1,length(t_vec));
+for n = 1:length(t_vec)
+    tval = t_vec(n);
+    partial_index = tval/tstep;
+    index = floor(partial_index)+1;
+    if index > length(CA_2)
+        index = index - length(CA_2);
+    end
+    sig_CA_2(n) = CA_2(index); 
+end
+
+% Create a vector of IF carrier phase
+fIF = -60e3;
+fD = 5; %????????
+carrier_phase = zeros(1,length(t_vec));
+for n = 1:length(t_vec)
+    carrier_phase(n) = 2*pi*(fIF + fD)*t_vec(n);
+end
 
 %% ========================================================================
 % Problem 3 - Create a search grid
