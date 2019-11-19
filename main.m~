@@ -20,8 +20,8 @@ GPS_ECEF = lla2ecef(GPS_LLA);
 %data collected on August 28th, 2018 at 16:29 UTC
 yumafilename = 'YUMA240.ALM';
 [gps_ephem,gps_ephem_cell] = read_GPSyuma(yumafilename);
-week = cal2gps([2018, 08, 28]);
-tow = [week, 2*86400+(16*60+29)*60]; %(16 hours times 60 min/hr + 29min)*60sec/min
+week = cal2gps([2019, 08, 28]);
+tow = [week, (16*60+29)*60]; %(16 hours times 60 min/hr + 29min)*60sec/min
 
 for i=1:length(gps_ephem)
     [~, pos] = broadcast2pos(gps_ephem(i,:), tow, gps_ephem(i,1));
@@ -30,17 +30,11 @@ for i=1:length(gps_ephem)
 end
 
 %now go through and find az el of all sats at 16:29
-count=1;
 for i=1:length(satECEF)
-    [az,el,~] = compute_azelrange(GPS_ECEF,satECEF(i,:));
-    if el > 0
-        azimuth(count) = az;
-        elevation(count) = el;
-        svs(count) = i;
-        count=count+1;
-    end
+    [az,el,~] = compute_azelrange(GPS_ECEF,satECEF(
 end
-plotAzEl(azimuth,elevation,svs)
+
+
 
 %% ========================================================================
 % Problem 2 - Carrier Wipeoff
