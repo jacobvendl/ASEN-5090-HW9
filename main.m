@@ -11,7 +11,7 @@ fn = 6.625e6;
 IF = -60e3;
 
 lat=40.0; long = 105.15; alt = 1629;
-GPS_LLA = [lat; long; alt];
+GPS_LLA = [lat, long, alt];
 GPS_ECEF = lla2ecef(GPS_LLA);
 
 
@@ -20,15 +20,45 @@ GPS_ECEF = lla2ecef(GPS_LLA);
 % Problem 1 - Visiblity Prediction
 %==========================================================================
 %data collected on August 28th, 2018 at 16:29 UTC
-[gps_ephem,gps_ephem_cell] = read_GPSyuma(yumafilename);
+%[gps_ephem,gps_ephem_cell] = read_GPSyuma(yumafilename);
 
 
 %% ========================================================================
 % Problem 2 - Carrier Wipeoff
 %==========================================================================
 
-% Delay axis
-delay = 0;
+% Load the datafile
+load('ASEN5091data.mat');
+
+% Create a time vector at intervals of deltaTs
+tstep = 1/fn;
+tdur = 0.001; % 1ms
+t_vec = 0 : tstep : tdur;
+
+% Create a vector of PRN2 C/A code values
+PRN_2 = [1, 9]; % PRN 5
+CA_2 = generate_CA_code(PRN_2);
+
+% Match C/A code to time vector
+tstep = tdur/length(CA_2);
+sig_CA_2 = zeros(1,length(t_vec));
+for n = 1:length(t_vec)
+    tval = t_vec(n);
+    partial_index = tval/tstep;
+    index = floor(partial_index)+1;
+    if index > length(CA_2)
+        index = index - length(CA_2);
+    end
+    sig_CA_2(n) = CA_2(index); 
+end
+
+% Create a vector of IF carrier phase
+fIF = -60e3;
+fD = 5; %????????
+carrier_phase = zeros(1,length(t_vec));
+for n = 1:length(t_vec)
+    carrier_phase(n) = 2*pi*(fIF + fD)*t_vec(n);
+end
 
 %% ========================================================================
 % Problem 3 - Create a search grid
