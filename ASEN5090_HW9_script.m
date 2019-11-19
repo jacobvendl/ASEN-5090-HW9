@@ -32,7 +32,7 @@ for i=1:size(gps_ephem,1)
     clear pos
 end
 
-%now go through and find az el of all sats at 16:29
+% Find az el of all sats at 16:29
 count=1;
 for i=1:size(satECEF,1)
     [az,el,~] = compute_azelrange(GPS_ECEF,satECEF(i,:));
@@ -125,6 +125,11 @@ ylabel('S');
 % Problem 4 - Find more satellites
 %==========================================================================
 
+for s = 1:size(gps_ephem,1) % Look for all satellites
+    
+    
+    
+end % s = 1:size(gps_ephem,1)
 
 %% ========================================================================
 % Problem 5 - Increase the integration time
