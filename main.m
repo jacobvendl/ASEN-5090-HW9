@@ -24,7 +24,7 @@ week = cal2gps([2018, 08, 28]);
 tow = [week, 2*86400+(16*60+29)*60]; %(16 hours times 60 min/hr + 29min)*60sec/min
 
 for i=1:length(gps_ephem)
-    [~, pos] = broadcast2pos(gps_ephem(i,:), tow, gps_ephem(i,1));
+    [~, pos] = broadcast2pos(gps_ephem, tow, gps_ephem(i,1));
     satECEF(i,1:3) = pos';
     clear pos
 end
@@ -55,7 +55,7 @@ tdur = 0.001; % 1ms
 t_vec = 0 : tstep : tdur;
 
 % Create a vector of PRN2 C/A code values
-PRN_2 = [1, 9]; % PRN 5
+PRN_2 = [3, 7]; % PRN 5
 CA_2 = generate_CA_code(PRN_2);
 
 % Match C/A code to time vector
