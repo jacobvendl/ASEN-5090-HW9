@@ -10,7 +10,7 @@ clear all; close all; clc
 fn = 6.625e6;
 IF = -60e3;
 
-lat=40.0; long = 105.15; alt = 1629;
+lat=40.0; long = -105.15; alt = 1629;
 GPS_LLA = [lat; long; alt]';
 GPS_ECEF = lla2ecef(GPS_LLA);
 
