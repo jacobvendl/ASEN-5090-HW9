@@ -79,7 +79,7 @@ carrier_phase = 2*pi*(fIF + fD).*t_vec;
 delay = 9;
 tau = delay*tstep;
 S=0;
-for i=1:6625
+for i=1:length(t_vec)
     S = S + data(i) * (i+delay)*sig_CA_2(i)*exp(-1i*carrier_phase(i));
 end
 
@@ -106,11 +106,17 @@ set(fig, 'Position', [100 100 900 600]);
 title('Peak Doppler - S as Function of tau');
 xlabel('\tau');
 ylabel('S');
-plot(el_store,dpr_pre_store,'.','LineWidth',1);
-saveas(fig, 'ASEN5090_HW9_3_1.png','png');
+%plot(el_store,dpr_pre_store,'.','LineWidth',1);
+%saveas(fig, 'ASEN5090_HW9_3_1.png','png');
 
 % Peak delay, plot S as a function of Doppler
-
+fig = figure('visible','on'); hold on; grid on; grid minor; box on;
+set(fig, 'Position', [100 100 900 600]); 
+title('Peak Doppler - S as Function of tau');
+xlabel('\tau');
+ylabel('S');
+%plot(el_store,dpr_pre_store,'.','LineWidth',1);
+%saveas(fig, 'ASEN5090_HW9_3_2.png','png');
 
 %% ========================================================================
 % Problem 4 - Find more satellites
