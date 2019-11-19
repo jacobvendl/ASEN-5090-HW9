@@ -7,6 +7,8 @@
 
 clear all; close all; clc
 
+addpath('GPS Functions');
+
 fn = 6.625e6;
 IF = -60e3;
 
@@ -23,20 +25,21 @@ yumafilename = 'YUMA240.ALM';
 week = cal2gps([2018, 08, 28]);
 tow = [week, 2*86400+(16*60+29)*60]; %(16 hrs times 60 m/hr + 29min)*60s/m
 
-for i=1:length(gps_ephem)
-    [~, pos] = broadcast2pos(gps_ephem, tow, gps_ephem(i,1));
+for i=1:size(gps_ephem,1)
+    PRN(i) = gps_ephem(i,1);
+    [~, pos] = broadcast2pos(gps_ephem, tow, PRN(i));
     satECEF(i,1:3) = pos';
     clear pos
 end
 
 %now go through and find az el of all sats at 16:29
 count=1;
-for i=1:length(satECEF)
+for i=1:size(satECEF,1)
     [az,el,~] = compute_azelrange(GPS_ECEF,satECEF(i,:));
     if el > 0
         azimuth(count) = az;
         elevation(count) = el;
-        svs(count) = i;
+        svs(count) = PRN(i);
         count=count+1;
     end
 end
@@ -106,8 +109,8 @@ set(fig, 'Position', [100 100 900 600]);
 title('Peak Doppler - S as Function of tau');
 xlabel('\tau');
 ylabel('S');
-plot(el_store,dpr_pre_store,'.','LineWidth',1);
-saveas(fig, 'ASEN5090_HW9_3_1.png','png');
+%plot(el_store,dpr_pre_store,'.','LineWidth',1);
+%saveas(fig, 'ASEN5090_HW9_3_1.png','png');
 
 % Peak delay, plot S as a function of Doppler
 fig = figure('visible','on'); hold on; grid on; grid minor; box on;
