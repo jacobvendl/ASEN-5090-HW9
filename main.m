@@ -79,8 +79,8 @@ carrier_phase = 2*pi*(fIF + fD).*t_vec;
 delay = 9;
 tau = delay*tstep;
 S=0;
-for i=1:6625
-    S = S + data(i) * (i+delay)*sig_CA_2(i)*exp(-1i*carrier_phase(i));
+for n=1:6625
+    S = S + data(n) * (n+delay)*sig_CA_2(n)*exp(-1i*carrier_phase(n));
 end
 
 %% ========================================================================
@@ -106,7 +106,7 @@ set(fig, 'Position', [100 100 900 600]);
 title('Peak Doppler - S as Function of tau');
 xlabel('\tau');
 ylabel('S');
-plot(el_store,dpr_pre_store,'.','LineWidth',1);
+%plot(el_store,dpr_pre_store,'.','LineWidth',1);
 saveas(fig, 'ASEN5090_HW9_3_1.png','png');
 
 % Peak delay, plot S as a function of Doppler
