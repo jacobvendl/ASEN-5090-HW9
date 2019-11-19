@@ -11,4 +11,5 @@ GPS_LLA = [lat; long; alt];
 GPS_ECEF = lla2ecef(GPS_LLA);
 
 %data collected on August 28th, 2018 at 16:29 UTC
+[gps_ephem,gps_ephem_cell] = read_GPSyuma(yumafilename);
 
