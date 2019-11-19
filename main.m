@@ -17,11 +17,11 @@ GPS_ECEF = lla2ecef(GPS_LLA);
 %% ========================================================================
 % Problem 1 - Visiblity Prediction
 %==========================================================================
-%data collected on August 28th, 2018 at 16:29 UTC
+% Data collected on August 28th, 2018 at 16:29 UTC
 yumafilename = 'YUMA240.ALM';
 [gps_ephem,gps_ephem_cell] = read_GPSyuma(yumafilename);
 week = cal2gps([2018, 08, 28]);
-tow = [week, 2*86400+(16*60+29)*60]; %(16 hours times 60 min/hr + 29min)*60sec/min
+tow = [week, 2*86400+(16*60+29)*60]; %(16 hrs times 60 m/hr + 29min)*60s/m
 
 for i=1:length(gps_ephem)
     [~, pos] = broadcast2pos(gps_ephem, tow, gps_ephem(i,1));
@@ -55,7 +55,7 @@ tdur = 0.001; % 1ms
 t_vec = 0 : tstep : tdur;
 
 % Create a vector of PRN2 C/A code values
-PRN_2 = [3, 7]; % PRN 5
+PRN_2 = [3, 7]; % PRN 2
 CA_2 = generate_CA_code(PRN_2);
 
 % Match C/A code to time vector
@@ -82,9 +82,34 @@ S=0;
 for i=1:6625
     S = S + data(i) * (i+delay)*sig_CA_2(i)*exp(-1i*carrier_phase(i));
 end
+
 %% ========================================================================
 % Problem 3 - Create a search grid
 %==========================================================================
+% Setup the delay axis
+sdur = length(data)/fn;
+delay_vec = t_vec;
+
+
+% Setup the Doppler axisf
+Dstep = 1000; % Hz
+
+
+% Compute and display a 3D mesh
+
+
+
+
+% Peak Doppler, plot S as function of tau
+fig = figure('visible','on'); hold on; grid on; grid minor; box on;
+set(fig, 'Position', [100 100 900 600]); 
+title('Peak Doppler - S as Function of tau');
+xlabel('\tau');
+ylabel('S');
+plot(el_store,dpr_pre_store,'.','LineWidth',1);
+saveas(fig, 'ASEN5090_HW9_3_1.png','png');
+
+% Peak delay, plot S as a function of Doppler
 
 
 %% ========================================================================
