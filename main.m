@@ -27,6 +27,8 @@ GPS_ECEF = lla2ecef(GPS_LLA);
 % Problem 2 - Carrier Wipeoff
 %==========================================================================
 
+% Delay axis
+delay = 0;
 
 %% ========================================================================
 % Problem 3 - Create a search grid
