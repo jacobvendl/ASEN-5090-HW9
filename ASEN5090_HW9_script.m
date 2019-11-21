@@ -79,10 +79,10 @@ fIF = -60e3;
 fD = 0; %????????
 carrier_phase = 2*pi*(fIF + fD).*t_vec;
 
-tau=9/6626;
+tau=9;
 S=0;
 for i=1:length(t_vec)
-    ind = round(i+tau/tstep);
+    ind = round(i+tau);
     S = S + data(ind)*sig_CA_2(i)*exp(-(1i)*carrier_phase(i));
 end
 disp(S)
