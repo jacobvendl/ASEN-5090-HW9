@@ -84,8 +84,20 @@ for i=1:length(t_vec)
     ind = round(i+tau);
     S = S + data(ind)*sig_CA_2(i)*exp(-(1i)*carrier_phase(i));
 end
-fprintf('DOP=%0.0f kHz    DELAY= %0.0f samples    S= %0.4d \n',fD,tau,S);
-fprintf('DOP=%0.0f kHz    DELAY= %0.0f samples    S= %0.4d \n',fD,tau,S);
+fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,real(S),imag(S));
+
+
+% Example 2
+tau=2943;
+fD = 1000;
+carrier_phase = 2*pi*(fIF + fD)*t_vec;
+
+S=0;
+for i=1:length(t_vec)
+    ind = round(i+tau);
+    S = S + data(ind)*sig_CA_2(i)*exp(-(1i)*carrier_phase(i));
+end
+fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,real(S),imag(S));
 
 %% ========================================================================
 % Problem 3 - Create a search grid
