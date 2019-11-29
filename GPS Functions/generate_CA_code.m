@@ -3,8 +3,6 @@ function [CA] = generate_CA_code(PRN_selector)
 G1 = ones(1,10);
 G2 = ones(1,10);
 
-PRN_selector = [1, 9]; % PRN 5
-
 for n = 1:1023
     % Extract G1 and G2 output
     G1_out(n) = G1(end);

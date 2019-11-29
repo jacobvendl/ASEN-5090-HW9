@@ -53,9 +53,9 @@ plotAzEl(azimuth,elevation,svs)
 load('ASEN5091data.mat');
 
 % Create a time vector at intervals of deltaTs
-tstep = 1/fn;
+tstep_sam = 1/fn;
 tdur = 0.001; % 1ms
-t_vec = 0 : tstep : tdur;
+t_vec = 0 : tstep_sam : tdur;
 
 % Create a vector of PRN2 C/A code values
 PRN_2 = [3, 7]; % PRN 2
@@ -77,7 +77,9 @@ end
 % Create a vector of IF carrier phase
 fIF = -60e3;
 fD = 0; %????????
-carrier_phase = 2*pi*(fIF + fD).*t_vec;
+carrier_phase = 2*pi*(fIF + fD)*t_vec;
+
+S_check = sig_CA_2.*(cos(carrier_phase)+j*sin(carrier_phase));
 
 tau=9;
 S=0;
@@ -86,6 +88,7 @@ for i=1:length(t_vec)
     S = S + data(ind)*sig_CA_2(i)*exp(-(1i)*carrier_phase(i));
 end
 disp(S)
+
 %% ========================================================================
 % Problem 3 - Create a search grid
 %==========================================================================
