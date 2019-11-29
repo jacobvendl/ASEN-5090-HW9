@@ -10,7 +10,7 @@ clear all; close all; clc
 addpath('GPS Functions');
 
 fn = 6.625e6;
-IF = -60e3;
+fIF = -60e3;
 
 lat=40.0; long = -105.15; alt = 1629;
 GPS_LLA = [lat; long; alt]';
@@ -74,20 +74,18 @@ for n = 1:length(t_vec)
     sig_CA_2(n) = CA_2(index); 
 end
 
-% Create a vector of IF carrier phase
-fIF = -60e3;
-fD = 0; %????????
+% Example 1
+tau=9;
+fD = 0;
 carrier_phase = 2*pi*(fIF + fD)*t_vec;
 
-S_check = sig_CA_2.*(cos(carrier_phase)+j*sin(carrier_phase));
-
-tau=9;
 S=0;
 for i=1:length(t_vec)
     ind = round(i+tau);
     S = S + data(ind)*sig_CA_2(i)*exp(-(1i)*carrier_phase(i));
 end
-disp(S)
+fprintf('DOP=%0.0f kHz    DELAY= %0.0f samples    S= %0.4d \n',fD,tau,S);
+fprintf('DOP=%0.0f kHz    DELAY= %0.0f samples    S= %0.4d \n',fD,tau,S);
 
 %% ========================================================================
 % Problem 3 - Create a search grid
