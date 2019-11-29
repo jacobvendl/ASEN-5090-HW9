@@ -103,36 +103,16 @@ fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,rea
 % Problem 3 - Create a search grid
 %==========================================================================
 % Setup the delay axis
-sdur = length(data)/fn;
-delay_vec = t_vec;
 
 
-% Setup the Doppler axisf
-Dstep = 1000; % Hz
-
+plot = true;
 
 % Compute and display a 3D mesh
+complex_correlator([3,7],data,t_vec,fIF,plot);
 
 
 
 
-% Peak Doppler, plot S as function of tau
-fig = figure('visible','on'); hold on; grid on; grid minor; box on;
-set(fig, 'Position', [100 100 900 600]); 
-title('Peak Doppler - S as Function of tau');
-xlabel('\tau');
-ylabel('S');
-%plot(el_store,dpr_pre_store,'.','LineWidth',1);
-%saveas(fig, 'ASEN5090_HW9_3_1.png','png');
-
-% Peak delay, plot S as a function of Doppler
-fig = figure('visible','on'); hold on; grid on; grid minor; box on;
-set(fig, 'Position', [100 100 900 600]); 
-title('Peak Doppler - S as Function of tau');
-xlabel('\tau');
-ylabel('S');
-%plot(el_store,dpr_pre_store,'.','LineWidth',1);
-%saveas(fig, 'ASEN5090_HW9_3_2.png','png');
 
 %% ========================================================================
 % Problem 4 - Find more satellites
@@ -148,7 +128,76 @@ end % s = 1:size(gps_ephem,1)
 % Problem 5 - Increase the integration time
 %==========================================================================
 
+function [delay, doppler] = complex_correlator(PRN,data,t_vec,fIF,plot)
+
+% Create a vector of PRN2 C/A code values
+CA = generate_CA_code(PRN);
+
+% Match C/A code to time vector
+tstep = 0.001/length(CA);
+sig_CA = zeros(1,length(t_vec));
+for n = 1:length(t_vec)
+    tval = t_vec(n);
+    partial_index = tval/tstep;
+    index = floor(partial_index)+1;
+    if index > length(CA)
+        index = index - length(CA);
+    end
+    sig_CA(n) = CA(index); 
+end
 
 
+delay_vec = 0:1022;
 
+int_time = 2; % ms
+dstep = 1000/int_time;
+doppler_vec = -5e3:dstep:5e3;
+
+S = zeros(length(delay_vec),length(doppler_vec));
+for i = 1:length(delay_vec)
+    for j = 1:length(doppler_vec)
+        tau = delay_vec(i);
+        fD = doppler_vec(j);
+        carrier_phase = 2*pi*(fIF + fD)*t_vec;
+
+        sumS=0;
+        for k=1:length(t_vec)
+            ind = round(k+tau);
+            sumS = sumS + data(ind)*sig_CA(k)*exp(-(1i)*carrier_phase(k));
+        end
+        S(i,j) = norm(sumS);
+    end % j = 1:length(doppler_vec)
+end % i = 1:length(delay_vec)
+
+
+if plot == true
+    % Plot 3D mesh
+    fig = figure; hold on; grid on; grid minor;
+    title(sprintf('Complex Correlator of PRN %0.0f',PRN));
+    xlabel('Delay [samples]');
+    ylabel('Doppler Frequency [Hz]');
+    zlabel('Magnitude');
+    mesh(delay_vec,doppler_vec,S');
+    saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_CC.png',PRN),'png');
+    
+    % Plot Peak Doppler Bin
+    fig = figure; hold on; grid on; grid minor;
+    title(sprintf('Peak Doppler Bin of PRN %0.0f',PRN));
+    xlabel('Delay [samples]');
+    ylabel('Complex Correlator Magnitude');
+    
+    saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDoppler.png',PRN),'png');
+    
+    % Plot Peak Delay Bin
+    fig = figure; hold on; grid on; grid minor;
+    title(sprintf('Peak Delay Bin of PRN %0.0f',PRN));
+    xlabel('Doppler [Hz]');
+    ylabel('Complex Correlator Magnitude');
+    
+    saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDelay.png',PRN),'png');
+    
+end
+
+
+end
 
