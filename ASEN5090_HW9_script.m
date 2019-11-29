@@ -150,7 +150,7 @@ for n = 1:length(t_vec)
 end
 
 
-delay_vec = 0:length(t_vec);
+delay_vec = 0:1022;
 
 int_time = 2; % ms
 dstep = 1000/int_time;
@@ -189,7 +189,7 @@ if plot == true
     ylabel('Delay [samples]');
     xlabel('Doppler Frequency [Hz]');
     zlabel('Magnitude');
-    mesh(doppler_vec,delay_vec,S);
+    surf(doppler_vec,delay_vec,S);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_CC.png',PRN),'png');
     
     % Plot Peak Doppler Bin
@@ -197,7 +197,7 @@ if plot == true
     title(sprintf('Peak Doppler Bin of PRN %0.0f',PRN));
     xlabel('Delay [samples]');
     ylabel('Complex Correlator Magnitude');
-    plot(delay_vec',peak_doppler);
+    plot(delay_vec,peak_doppler);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDoppler.png',PRN),'png');
     
     % Plot Peak Delay Bin
@@ -205,7 +205,7 @@ if plot == true
     title(sprintf('Peak Delay Bin of PRN %0.0f',PRN));
     xlabel('Doppler [Hz]');
     ylabel('Complex Correlator Magnitude');
-    plot(doppler_vec',peak_delay);
+    plot(doppler_vec,peak_delay);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDelay.png',PRN),'png');
     
 end
