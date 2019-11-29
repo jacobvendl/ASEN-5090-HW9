@@ -108,7 +108,7 @@ fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,rea
 plot = true;
 
 % Compute and display a 3D mesh
-complex_correlator([3,7],data,t_vec,fIF,plot);
+complex_correlator([3,7],data,t_vec,plot);
 
 
 
@@ -128,7 +128,10 @@ end % s = 1:size(gps_ephem,1)
 % Problem 5 - Increase the integration time
 %==========================================================================
 
-function [delay, doppler] = complex_correlator(PRN,data,t_vec,fIF,plot)
+function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,plot)
+
+fn = 6.625e6;
+fIF = -60e3;
 
 % Create a vector of PRN2 C/A code values
 CA = generate_CA_code(PRN);
@@ -147,7 +150,7 @@ for n = 1:length(t_vec)
 end
 
 
-delay_vec = 0:1022;
+delay_vec = 0:length(t_vec);
 
 int_time = 2; % ms
 dstep = 1000/int_time;
@@ -169,15 +172,24 @@ for i = 1:length(delay_vec)
     end % j = 1:length(doppler_vec)
 end % i = 1:length(delay_vec)
 
+[vec_max,idx] = max(S);
+[S_max,doppler_idx] = max(vec_max);
+delay_idx = idx(doppler_idx);
+
+delay = delay_vec(delay_idx);
+doppler = doppler_vec(doppler_idx);
+
+peak_doppler = S(:,doppler_idx);
+peak_delay = S(delay_idx,:);
 
 if plot == true
     % Plot 3D mesh
     fig = figure; hold on; grid on; grid minor;
     title(sprintf('Complex Correlator of PRN %0.0f',PRN));
-    xlabel('Delay [samples]');
-    ylabel('Doppler Frequency [Hz]');
+    ylabel('Delay [samples]');
+    xlabel('Doppler Frequency [Hz]');
     zlabel('Magnitude');
-    mesh(delay_vec,doppler_vec,S');
+    mesh(doppler_vec,delay_vec,S);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_CC.png',PRN),'png');
     
     % Plot Peak Doppler Bin
@@ -185,7 +197,7 @@ if plot == true
     title(sprintf('Peak Doppler Bin of PRN %0.0f',PRN));
     xlabel('Delay [samples]');
     ylabel('Complex Correlator Magnitude');
-    
+    plot(delay_vec',peak_doppler);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDoppler.png',PRN),'png');
     
     % Plot Peak Delay Bin
@@ -193,7 +205,7 @@ if plot == true
     title(sprintf('Peak Delay Bin of PRN %0.0f',PRN));
     xlabel('Doppler [Hz]');
     ylabel('Complex Correlator Magnitude');
-    
+    plot(doppler_vec',peak_delay);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDelay.png',PRN),'png');
     
 end
