@@ -104,11 +104,10 @@ fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,rea
 %==========================================================================
 % Setup the delay axis
 
-
-plot = true;
+show_plot = true;
 
 % Compute and display a 3D mesh
-complex_correlator([3,7],data,t_vec,plot);
+complex_correlator([3,7],data,t_vec,show_plot);
 
 
 
@@ -128,7 +127,7 @@ end % s = 1:size(gps_ephem,1)
 % Problem 5 - Increase the integration time
 %==========================================================================
 
-function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,plot)
+function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,show_plot)
 
 fn = 6.625e6;
 fIF = -60e3;
@@ -182,7 +181,7 @@ doppler = doppler_vec(doppler_idx);
 peak_doppler = S(:,doppler_idx);
 peak_delay = S(delay_idx,:);
 
-if plot == true
+if show_plot == true
     % Plot 3D mesh
     fig = figure; hold on; grid on; grid minor;
     title(sprintf('Complex Correlator of PRN %0.0f',PRN));
