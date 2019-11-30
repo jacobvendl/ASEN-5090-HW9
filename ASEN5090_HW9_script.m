@@ -187,8 +187,11 @@ if show_plot == true
     title(sprintf('Complex Correlator of PRN %0.0f',PRN));
     ylabel('Delay [samples]');
     xlabel('Doppler Frequency [Hz]');
+    xlim([doppler_vec(1),doppler_vec(end)]);
+    ylim([delay_vec(1),delay_vec(end)]);
     zlabel('Magnitude');
     surf(doppler_vec,delay_vec,S);
+    view(35,40)
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_CC.png',PRN),'png');
     
     % Plot Peak Doppler Bin
@@ -196,6 +199,7 @@ if show_plot == true
     title(sprintf('Peak Doppler Bin of PRN %0.0f',PRN));
     xlabel('Delay [samples]');
     ylabel('Complex Correlator Magnitude');
+    xlim([delay_vec(1),delay_vec(end)]);
     plot(delay_vec,peak_doppler);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDoppler.png',PRN),'png');
     
