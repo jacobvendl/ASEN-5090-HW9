@@ -149,7 +149,7 @@ for n = 1:length(t_vec)
 end
 
 
-delay_vec = 0:1022;
+delay_vec = 0:length(t_vec);
 
 int_time = 2; % ms
 dstep = 1000/int_time;
