@@ -58,7 +58,6 @@ tdur = 0.001; % 1ms
 t_vec = 0 : tstep_sam : tdur;
 
 % Create a vector of PRN2 C/A code values
-PRN_2 = [3, 7]; % PRN 2
 CA_2 = generate_CA_code(2);
 
 % Match C/A code to time vector
@@ -132,10 +131,8 @@ function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,show_plot)
 fn = 6.625e6;
 fIF = -60e3;
 
-PRN_set = [3,7];
-
 % Create a vector of PRN2 C/A code values
-CA = generate_CA_code(PRN_set);
+CA = generate_CA_code(PRN);
 
 % Match C/A code to time vector
 tstep = 0.001/length(CA);
