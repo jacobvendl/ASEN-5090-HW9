@@ -107,7 +107,7 @@ fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,rea
 show_plot = true;
 
 % Compute and display a 3D mesh
-complex_correlator([3,7],data,t_vec,show_plot);
+complex_correlator(2,data,t_vec,show_plot);
 
 
 
@@ -132,8 +132,10 @@ function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,show_plot)
 fn = 6.625e6;
 fIF = -60e3;
 
+PRN_set = [3,7];
+
 % Create a vector of PRN2 C/A code values
-CA = generate_CA_code(PRN);
+CA = generate_CA_code(PRN_set);
 
 % Match C/A code to time vector
 tstep = 0.001/length(CA);
