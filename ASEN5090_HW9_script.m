@@ -107,7 +107,10 @@ fprintf('DOP = %0.0f kHz  DELAY = %0.0f samples  S = %0.4f+%0.4fi \n',fD,tau,rea
 show_plot = true;
 
 % Compute and display a 3D mesh
-complex_correlator(2,data,t_vec,int_time,show_plot);
+fprintf('Example Peak with Integration Time 0.001 seconds:\n');
+[tau, doppler, S_max] = complex_correlator(2,data,t_vec,int_time,show_plot);
+fprintf('    PRN %0.0f || Tau = %0.0f samples or %0.2f meters || Doppler = %0.0f Hz || S = %0.4f\n',...
+    2,tau,(tau/1023*0.001*3e8),doppler,S_max);
 
 
 
@@ -116,9 +119,12 @@ complex_correlator(2,data,t_vec,int_time,show_plot);
 %% ========================================================================
 % Problem 4 - Find more satellites
 %==========================================================================
-sats = [6,12,19];
+sats = [5,6,12];
+fprintf('Peaks with Integration Time 0.001 seconds:\n');
 for s = 1:length(sats) % Look for all satellites
-    complex_correlator(sats(s),data,t_vec,int_time,show_plot);
+    [tau_peak(s), doppler_peak(s), S_max(s)] = complex_correlator(sats(s),data,t_vec,int_time,show_plot);
+    fprintf('    PRN %0.0f || Tau = %0.0f samples or %0.2f meters || Doppler = %0.0f Hz || S = %0.4f\n',...
+        sats(s),tau_peak(s),(tau_peak(s)/1023*0.001*3e8),doppler_peak(s),S_max(s));
 end % s = 1:size(gps_ephem,1)
 
 
@@ -129,16 +135,23 @@ end % s = 1:size(gps_ephem,1)
 int_time = 0.002; % 1ms
 t_vec = 0 : tstep_sam : int_time;
 
-sats = [6,12,19];
+sats = [5,6,12];
+fprintf('Peaks with Integration Time 0.002 seconds:\n');
 for s = 1:length(sats) % Look for all satellites
-    complex_correlator(sats(s),data,t_vec,int_time,show_plot);
+    [tau_peak_2(s), doppler_peak_2(s), S_max_2(s)] = complex_correlator(sats(s),data,t_vec,int_time,show_plot);
+    fprintf('    PRN %0.0f || Tau = %0.0f samples or %0.2f meters || Doppler = %0.0f Hz || S = %0.4f\n',...
+        sats(s),tau_peak_2(s),(tau_peak_2(s)/1023*0.001*3e8),doppler_peak_2(s),S_max_2(s));
 end % s = 1:size(gps_ephem,1)
+
+
 
 
 
 function [delay, doppler, S_max] = complex_correlator(PRN,data,t_vec,int_time,show_plot)
 
 fIF = -60e3;
+
+mult = int_time/0.001;
 
 % Create a vector of PRN2 C/A code values
 CA = generate_CA_code(PRN,int_time);
@@ -163,8 +176,8 @@ dstep = 1000/(int_time*1000);
 doppler_vec = -5e3:dstep:5e3;
 
 S = zeros(length(delay_vec),length(doppler_vec));
-for i = 1:length(delay_vec)
-    for j = 1:length(doppler_vec)
+for i = 1:length(delay_vec)/mult
+    parfor j = 1:length(doppler_vec)
         tau = delay_vec(i);
         fD = doppler_vec(j);
         carrier_phase = 2*pi*(fIF + fD)*t_vec;
@@ -195,7 +208,7 @@ if show_plot == true
     ylabel('Delay [samples]');
     xlabel('Doppler Frequency [Hz]');
     xlim([doppler_vec(1),doppler_vec(end)]);
-    ylim([delay_vec(1),delay_vec(end)]);
+    ylim([delay_vec(1),delay_vec(end)/mult]);
     zlabel('Magnitude');
     surf(doppler_vec,delay_vec,S);
     view(35,40)
@@ -206,7 +219,7 @@ if show_plot == true
     title(sprintf('Peak Doppler Bin of PRN %0.0f',PRN));
     xlabel('Delay [samples]');
     ylabel('Complex Correlator Magnitude');
-    xlim([delay_vec(1),delay_vec(end)]);
+    xlim([delay_vec(1),delay_vec(end)/mult]);
     plot(delay_vec,peak_doppler);
     saveas(fig,sprintf('ASEN5090_HW9_PRN%0.0f_PeakDoppler_%0.0f.png',PRN,int_time*1000),'png');
     
