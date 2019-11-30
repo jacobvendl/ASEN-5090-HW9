@@ -59,7 +59,7 @@ t_vec = 0 : tstep_sam : tdur;
 
 % Create a vector of PRN2 C/A code values
 PRN_2 = [3, 7]; % PRN 2
-CA_2 = generate_CA_code(PRN_2);
+CA_2 = generate_CA_code(2);
 
 % Match C/A code to time vector
 tstep = tdur/length(CA_2);
