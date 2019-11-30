@@ -1,4 +1,4 @@
-function [caCode] = generate_CA_code(PRN_num)
+function [caCode] = generate_CA_code(PRN_num,integration_time)
 
 %Jake Vendl
 %ASEN 5090
@@ -18,7 +18,7 @@ PRN = PRN_catalog(PRN_num,:);
 G1 = ones(1,10);
 G2 = ones(1,10);
 
-for i=1:1023
+for i=1:integration_time/0.001*1023
     %G1 operations
     G1_out(i) = G1(end); %this goes before the shift
     newG1bit = int8(xor(G1(3),G1(10))); %from pg 63
